@@ -1,3 +1,4 @@
+
 #include <stdlib.h>
 #include "text_manager.h"
 
@@ -19,13 +20,17 @@ int main(int argc, char* argv[]) {
   int blc[4];		/* I name this "blink coordinates" */
   create_main_window();
   my_win = stdscr;
-
   /* TODO (George): In the case that the terminal doesn't support 
      colors, maybe I should ask the user if they want to play without
      colors and just use text highlighting, or terminate the game     */
 
   if (has_colors() == TRUE) {
-		handle_color_case(my_win);
+		curs_set(0);
+		unsigned int choice = handle_color_case(my_win);
+		if (!choice) {
+			destroy_window(my_win);
+			exit(EXIT_FAILURE);
+		} curs_set(1);
   } else {
     start_color();
     init_pair(1, COLOR_RED, COLOR_WHITE);
@@ -50,7 +55,7 @@ int main(int argc, char* argv[]) {
   gettimeofday(&t2, NULL);
   elapsed_time = (t2.tv_sec - t1.tv_sec);
   curs_set(0);
-  print_stats(my_win, elapsed_time, info->accuracy);
+  print_stats(my_win, elapsed_time, info->accuracy, info->mistakes);
   curs_set(1);
   getch();
   destroy_window(my_win);

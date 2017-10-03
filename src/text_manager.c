@@ -151,27 +151,63 @@ unsigned int get_digits_number(void) {
 	return digits;
 }
 
-void print_stats(WINDOW* win, double t, float ac) {
+void print_stats(WINDOW* win, double t, float ac, unsigned int m) {
 	wclear(win);
 	attron(A_UNDERLINE);
-	mvwprintw(win, LINES/2, (COLS - strlen("STATS"))/2, "STATS");
+	mvwprintw(win, LINES/2 - 3, (COLS - strlen("STATS"))/2, "STATS");
 	attroff(A_UNDERLINE);
 	size_t beggining = COLS/2 - strlen("STATS")/2 - 20;
-	mvwprintw(win, LINES/2 + 2, beggining, "It took you %.1f seconds to write the text", t);
-	mvwprintw(win, LINES/2 + 4, beggining, "You were typing %.1f characters per second", (float) text_characters / t);
-	mvwprintw(win, LINES/2 + 6, beggining, "You were accurate by %.2f%%", ac * 100.0);
+	mvwprintw(win, LINES/2 - 1, beggining, "It took you %.1f seconds to write the text", t);
+	mvwprintw(win, LINES/2 + 1, beggining, "You were typing %.1f characters per second", (float) text_characters / t);
+	mvwprintw(win, LINES/2 + 3, beggining, "You were accurate by %.2f%%", ac * 100.0);
+	mvwprintw(win, LINES/2 + 5, beggining, "You made %u mistakes", m);
 	wrefresh(win);
 }
 
-void handle_color_case(WINDOW* win) {
+unsigned int handle_color_case(WINDOW* win) {
 	char str[] = "Your terminal doesn't support colors. Whould you like to  play and use highlight or exit?";
 	mvwprintw(win, LINES/2, (COLS - strlen(str))/2, "%s", str);
 	WINDOW* choices = newwin(3, 20, LINES/2 + 2, (COLS - 20)/2);
-	wborder(choices, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
-	mvwprintw(choices, 1, 2, "PLAY");
-	mvwprintw(choices, 1, 20 - (strlen("EXIT") + 1), "EXIT");
+	int n_choices = 2;
+	int highlight = 1;
+	int choice;
+	int chose;
+	keypad(choices, TRUE);
 	wrefresh(win);
-	wrefresh(choices);
-	getch();
-	return;
+	print_menu(choices, highlight);
+	while (1) {
+		int ch = wgetch(choices);
+		switch(ch) {
+		  case KEY_LEFT:
+				if (highlight == 1) highlight = n_choices;
+				else --highlight;
+			break;
+  		case KEY_RIGHT:
+				if (highlight == n_choices) highlight = 1;
+				else ++highlight;
+			break;
+    	case 10:
+				choice = highlight; chose = 1; break;
+			break;
+  		default: continue;
+		}
+		wrefresh(win);
+		print_menu(choices, highlight);
+		if (chose) break;
+	}
+	return (choice == 1) ? 1 : 0;
+}
+
+void print_menu(WINDOW* menu, int highlight) {
+	char* choices[] = { "PLAY", "EXIT" };
+	int places[2][2] = { {1, 2}, {1, 20 - (strlen("EXIT") + 1)} }; 
+	size_t n_choices = sizeof(choices) / sizeof(char*);
+	wborder(menu, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
+	for (size_t i = 0; i != n_choices; ++i) {
+		if (highlight == i + 1) {
+			wattron(menu, A_REVERSE);
+			mvwprintw(menu, places[i][0], places[i][1], "%s", choices[i]);
+			wattroff(menu, A_REVERSE);
+		} else mvwprintw(menu, places[i][0], places[i][1], "%s", choices[i]);
+	} wrefresh(menu);
 }
