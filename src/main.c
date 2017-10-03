@@ -20,10 +20,6 @@ int main(int argc, char* argv[]) {
   int blc[4];		/* I name this "blink coordinates" */
   create_main_window();
   my_win = stdscr;
-  /* TODO (George): In the case that the terminal doesn't support 
-     colors, maybe I should ask the user if they want to play without
-     colors and just use text highlighting, or terminate the game     */
-
   if (has_colors() == FALSE) {
     curs_set(0);
     unsigned int choice = handle_color_case(my_win);
