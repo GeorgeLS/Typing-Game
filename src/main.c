@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include "text_manager.h"
 
@@ -24,12 +23,19 @@ int main(int argc, char* argv[]) {
   /* TODO (George): In the case that the terminal doesn't support 
      colors, maybe I should ask the user if they want to play without
      colors and just use text highlighting, or terminate the game     */
-	
-  if (has_colors() == FALSE) {
-    destroy_window(my_win);
-    fprintf(stderr, "Your terminal doesn't support colors. "
-	    "I'm afraid that you can't play the game. :(\n");
-    exit(EXIT_FAILURE);
+
+  if (has_colors() == TRUE) {
+		char* str = "Your terminal doesn't support colors. Whould you like to play and use highlight or exit?";
+		mvwprintw(my_win, LINES/2, (COLS - strlen(str))/2, "%s", str);
+		WINDOW* choices = newwin(3, 20, LINES/2 + 2, (COLS - 12)/2);
+		box(choices, 0, 0);
+		wrefresh(my_win);
+		wrefresh(choices);
+		/* destroy_window(my_win); */
+    /* fprintf(stderr, "Your terminal doesn't support colors. " */
+	  /*   "I'm afraid that you can't play the game. :(\n"); */
+    /* exit(EXIT_FAILURE); */
+		getch();
   } else {
     start_color();
     init_pair(1, COLOR_RED, COLOR_WHITE);
@@ -57,9 +63,11 @@ int main(int argc, char* argv[]) {
 	print_stats(my_win, elapsed_time, info->accuracy);
 	curs_set(1);
   getch();
-  endwin();
+	destroy_window(my_win);
+	destroy_window(info_win);
   fclose(fp);
   free(snum);
   free(info);
   return EXIT_SUCCESS;
 }
+
