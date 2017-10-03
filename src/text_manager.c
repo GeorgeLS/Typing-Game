@@ -164,10 +164,12 @@ void print_stats(WINDOW* win, double t, float ac) {
 }
 
 void handle_color_case(WINDOW* win) {
-	char str[] = "Your terminal doesn't support colors. Whould you like to play and use highlight or exit?";
+	char str[] = "Your terminal doesn't support colors. Whould you like to  play and use highlight or exit?";
 	mvwprintw(win, LINES/2, (COLS - strlen(str))/2, "%s", str);
 	WINDOW* choices = newwin(3, 20, LINES/2 + 2, (COLS - 20)/2);
-	box(choices, 0, 0);
+	wborder(choices, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
+	mvwprintw(choices, 1, 2, "PLAY");
+	mvwprintw(choices, 1, 20 - (strlen("EXIT") + 1), "EXIT");
 	wrefresh(win);
 	wrefresh(choices);
 	getch();

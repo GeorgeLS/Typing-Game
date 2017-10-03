@@ -33,5 +33,6 @@ void update_info_window(WINDOW*, info_t*);
 void init_info(info_t*);
 unsigned int get_digits_number(void);
 void print_stats(WINDOW*, double, float);
+void handle_color_case(WINDOW*);
 
 #endif

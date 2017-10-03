@@ -25,17 +25,7 @@ int main(int argc, char* argv[]) {
      colors and just use text highlighting, or terminate the game     */
 
   if (has_colors() == TRUE) {
-		char* str = "Your terminal doesn't support colors. Whould you like to play and use highlight or exit?";
-		mvwprintw(my_win, LINES/2, (COLS - strlen(str))/2, "%s", str);
-		WINDOW* choices = newwin(3, 20, LINES/2 + 2, (COLS - 12)/2);
-		box(choices, 0, 0);
-		wrefresh(my_win);
-		wrefresh(choices);
-		/* destroy_window(my_win); */
-    /* fprintf(stderr, "Your terminal doesn't support colors. " */
-	  /*   "I'm afraid that you can't play the game. :(\n"); */
-    /* exit(EXIT_FAILURE); */
-		getch();
+		handle_color_case(my_win);
   } else {
     start_color();
     init_pair(1, COLOR_RED, COLOR_WHITE);
