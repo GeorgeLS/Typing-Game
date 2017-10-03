@@ -53,9 +53,9 @@ int main(int argc, char* argv[]) {
   update_info_window(info_win, info);
   move(4, 0);
   fseek(fp, 0, SEEK_SET);
-	struct timeval t1, t2;
-	double elapsed_time;
-	gettimeofday(&t1, NULL);
+  struct timeval t1, t2;
+  double elapsed_time;
+  gettimeofday(&t1, NULL);
   parse_user_input(my_win, info_win, fp, info);
   gettimeofday(&t2, NULL);
   elapsed_time = (t2.tv_sec - t1.tv_sec);
