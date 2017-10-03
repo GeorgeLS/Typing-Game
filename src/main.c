@@ -24,13 +24,13 @@ int main(int argc, char* argv[]) {
      colors, maybe I should ask the user if they want to play without
      colors and just use text highlighting, or terminate the game     */
 
-  if (has_colors() == TRUE) {
-		curs_set(0);
-		unsigned int choice = handle_color_case(my_win);
-		if (!choice) {
-			destroy_window(my_win);
-			exit(EXIT_FAILURE);
-		} curs_set(1);
+  if (has_colors() == FALSE) {
+    curs_set(0);
+    unsigned int choice = handle_color_case(my_win);
+    if (!choice) {
+      destroy_window(my_win);
+      exit(EXIT_FAILURE);
+    } curs_set(1);
   } else {
     start_color();
     init_pair(1, COLOR_RED, COLOR_WHITE);
@@ -65,4 +65,3 @@ int main(int argc, char* argv[]) {
   free(info);
   return EXIT_SUCCESS;
 }
-
